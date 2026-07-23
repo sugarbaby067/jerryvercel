@@ -1,0 +1,9 @@
+{
+  "name": "sugarbaby-site-vercel",
+  "version": "1.0.0",
+  "description": "Sugar BaBy Inc. portfolio — Vercel deployment",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  }
+}
