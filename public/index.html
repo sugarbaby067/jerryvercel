@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sugar BaBy · Jerry Francis</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f5f3ef;--surface:#ffffff;--surface2:#faf9f7;
+  --text:#1a1814;--text2:#6b6560;--text3:#a09a94;
+  --accent:#c8a96e;--accent2:#e8d5b0;--accent3:#f5efe3;
+  --border:#e8e3dc;--shadow:0 2px 24px rgba(0,0,0,0.07);
+}
+[data-theme="dark"]{
+  --bg:#0e0d0b;--surface:#1a1814;--surface2:#211f1b;
+  --text:#f0ece4;--text2:#9a9288;--text3:#5a544e;
+  --border:#2e2a24;--shadow:0 2px 24px rgba(0,0,0,0.4);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;transition:background .3s,color .3s;}
+.bg-wrap{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:-1;transition:background .3s;}
+.theme-btn{position:fixed;top:20px;right:80px;background:none;border:1px solid var(--border);width:44px;height:44px;border-radius:12px;cursor:pointer;font-size:20px;transition:all .2s;z-index:100;}
+.theme-btn:hover{border-color:var(--accent);background:var(--accent3);}
+.admin-btn{position:fixed;top:20px;right:20px;background:none;border:1px solid var(--border);width:44px;height:44px;border-radius:12px;cursor:pointer;font-size:18px;transition:all .2s;z-index:100;}
+.admin-btn:hover{border-color:var(--accent);background:var(--accent3);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:48px 40px 40px;margin:60px 20px 40px;max-width:580px;box-shadow:var(--shadow);position:relative;z-index:1;}
+.avatar-wrap{display:flex;justify-content:center;margin-bottom:24px;}
+.avatar{width:120px;height:120px;border-radius:50%;overflow:hidden;border:3px solid var(--accent2);background:var(--surface2);display:flex;align-items:center;justify-content:center;}
+.avatar img{width:100%;height:100%;object-fit:cover;}
+.name-block{text-align:center;margin-bottom:16px;}
+.nickname{font-size:32px;font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--text);}
+.official{font-size:14px;color:var(--text2);font-weight:300;letter-spacing:.5px;margin-top:4px;}
+.divider{display:flex;align-items:center;justify-content:center;gap:8px;margin:20px 0;opacity:.4;}
+.dl{width:24px;height:1px;background:var(--text);}
+.dd{width:4px;height:4px;border-radius:50%;background:var(--text);}
+.bio-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px;}
+.tag{display:inline-block;padding:6px 14px;background:var(--accent3);color:var(--accent);font-size:11px;letter-spacing:.8px;border-radius:20px;font-weight:500;text-transform:uppercase;transition:all .2s;}
+.tag:hover{background:var(--accent2);}
+.tag.brand{background:var(--accent);color:var(--surface);font-weight:600;}
+.links-container{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+.link-item{position:relative;}
+.link-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;text-decoration:none;color:var(--text);transition:all .2s;cursor:pointer;position:relative;}
+.link-btn:hover{border-color:var(--accent);background:var(--accent3);}
+.icon-wrap{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--accent3);}
+.icon-wrap img{width:24px;height:24px;object-fit:contain;}
+.icon-wrap svg{width:24px;height:24px;}
+.link-label{flex:1;min-width:0;}
+.link-platform{font-size:13px;font-weight:500;color:var(--text);}
+.link-handle{font-size:11px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.arrow{color:var(--accent);font-size:16px;flex-shrink:0;}
+.qr-toggle{background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:4px 8px;transition:all .2s;margin-right:8px;}
+.qr-toggle:hover{color:var(--accent);}
+.qr-panel{display:none;position:absolute;top:100%;right:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;z-index:10;box-shadow:var(--shadow);margin-top:8px;text-align:center;}
+.qr-panel.open{display:block;}
+.qr-panel img{width:140px;height:140px;border-radius:8px;}
+.qr-label{font-size:11px;color:var(--text2);margin-top:8px;}
+.link-item.qr-open .qr-toggle{color:var(--accent);}
+.footer{text-align:center;color:var(--text3);font-size:12px;padding:20px;margin-top:20px;}
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.show{display:flex;}
+.login-modal,.admin-modal{background:var(--surface);border-radius:20px;padding:28px;min-width:320px;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.modal-title{font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px;letter-spacing:.5px;}
+.modal-sub{font-size:11px;letter-spacing:1.2px;color:var(--text3);text-transform:uppercase;margin-bottom:20px;}
+.field-group{margin-bottom:16px;}
+.field-group label{display:block;font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--text2);margin-bottom:6px;font-weight:500;}
+.field-group input,.field-group textarea{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
+.field-group input:focus,.field-group textarea:focus{border-color:var(--accent);}
+.err-msg{font-size:12px;color:#e05555;margin-top:8px;display:none;}
+.err-msg.show{display:block;}
+.btn-row{display:flex;gap:10px;margin-top:20px;}
+.btn-primary{flex:1;padding:12px;border-radius:10px;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;transition:all .2s;letter-spacing:.3px;}
+.btn-primary:hover{background:#b8955a;transform:translateY(-1px);}
+.btn-cancel{padding:12px 18px;border-radius:10px;background:var(--surface2);color:var(--text2);border:1px solid var(--border);cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-cancel:hover{border-color:var(--accent);color:var(--text);}
+.admin-modal{max-width:480px;max-height:85vh;overflow-y:auto;}
+.admin-section{margin-bottom:24px;}
+.admin-section-title{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:14px;font-weight:500;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.icon-picker-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.icon-chip{display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:11px;transition:all .2s;}
+.icon-chip:hover{border-color:var(--accent);}
+.icon-chip.selected{background:var(--accent);color:#fff;border-color:var(--accent);}
+.icon-chip img{width:16px;height:16px;}
+.tags-editor{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.tag-edit-chip{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:3px 10px 3px 12px;font-size:11px;color:var(--text2);}
+.tag-remove{background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;line-height:1;padding:0;transition:color .2s;}
+.tag-remove:hover{color:#e05555;}
+.tag-add-row{display:flex;gap:8px;}
+.pfp-preview-row{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.pfp-preview-small{width:60px;height:60px;border-radius:50%;overflow:hidden;border:2px solid var(--border);}
+.pfp-preview-small img{width:100%;height:100%;object-fit:cover;}
+.pfp-upload-label{flex:1;display:flex;align-items:center;justify-content:center;padding:10px;border:1.5px dashed var(--border);border-radius:10px;cursor:pointer;font-size:12px;color:var(--text2);transition:border-color .2s;gap:6px;}
+.pfp-upload-label:hover{border-color:var(--accent);color:var(--accent);}
+#pfp-file-input{display:none;}
+.logout-btn{width:100%;padding:10px;border-radius:10px;background:none;border:1px solid var(--border);color:var(--text3);cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;margin-top:8px;transition:all .2s;}
+.logout-btn:hover{border-color:#e05555;color:#e05555;}
+.save-msg{font-size:12px;color:#4caf7d;text-align:center;margin-top:8px;display:none;animation:fadeInOut 2s ease;}
+.save-msg.show{display:block;}
+@keyframes fadeInOut{0%{opacity:0;} 10%{opacity:1;} 90%{opacity:1;} 100%{opacity:0;}}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.input-sm{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:9px;background:var(--surface2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;transition:border-color .2s;}
+.input-sm:focus{border-color:var(--accent);}
+.btn-small{padding:8px 14px;border-radius:8px;background:var(--accent3);color:var(--accent);border:1px solid rgba(200,169,110,.4);cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap;}
+.btn-small:hover{background:var(--accent2);}
+.preview-note{font-size:11px;color:var(--text2);padding:10px;background:var(--accent3);border-radius:8px;margin-top:8px;border-left:3px solid var(--accent);}
+@media(max-width:480px){
+  .card{padding:36px 22px 32px;margin:50px 14px 30px;}
+  .login-modal,.admin-modal{max-width:90vw;}
+  .nickname{font-size:28px;}
+}
+</style>
+</head>
+<body>
+<div class="bg-wrap"></div>
+<button class="theme-btn" onclick="toggleTheme()" id="theme-icon" title="Toggle theme">🌙</button>
+<button class="admin-btn" onclick="openLogin()" title="Admin Panel">⚙️</button>
+
+<div class="card">
+  <div class="avatar-wrap">
+    <div class="avatar"><img id="pfp-img" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e8d5b0'/%3E%3Ctext x='50' y='62' font-size='42' text-anchor='middle' fill='%23fff' font-family='sans-serif'%3ES%3C/text%3E%3C/svg%3E" alt="Sugar BaBy Inc."/></div>
+  </div>
+  <div class="name-block">
+    <div class="nickname">Sugar BaBy</div>
+    <div class="official">Emuron Jerry Francis</div>
+  </div>
+  <div class="divider"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
+  <div class="bio-tags" id="bio-tags-wrap">
+    <span class="tag">IT</span>
+    <span class="tag">Media Tech</span>
+    <span class="tag">AI</span>
+    <span class="tag">Digital Creator</span>
+    <span class="tag brand">Sugar BaBy Inc.</span>
+  </div>
+  <div class="links-container" id="links-container"></div>
+</div>
+<div class="footer">© 2026 Sugar BaBy Inc. · All rights reserved</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="login-overlay">
+  <div class="login-modal">
+    <div class="modal-title">Admin Login</div>
+    <div class="modal-sub">SUGAR BABY INC. · RESTRICTED</div>
+    <div class="field-group"><label>Username</label><input type="text" id="login-user" autocomplete="off" placeholder="Username"/></div>
+    <div class="field-group"><label>Password</label><input type="password" id="login-pass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+    <div class="err-msg" id="login-err"></div>
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="closeLogin()">Cancel</button>
+      <button class="btn-primary" id="login-btn" onclick="doLogin()">Login →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="modal-overlay" id="admin-overlay">
+  <div class="admin-modal">
+    <div class="modal-title">Edit Profile</div>
+    <div class="modal-sub">SUGAR BABY INC. · ADMIN PANEL</div>
+    
+    <div class="admin-section">
+      <div class="admin-section-title">Profile Photo</div>
+      <div class="pfp-preview-row">
+        <div class="pfp-preview-small"><img id="pfp-admin-preview" src="" alt="Preview"/></div>
+        <label class="pfp-upload-label" for="pfp-file-input">📷 Upload new photo</label>
+        <input type="file" id="pfp-file-input" accept="image/*" onchange="handlePfpUpload(this)"/>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section-title">Bio</div>
+      <textarea class="field-group" id="bio-input" placeholder="Enter bio..." rows="3" style="display:block;"></textarea>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section-title">Bio Tags</div>
+      <div class="tags-editor" id="tags-editor"></div>
+      <div class="tag-add-row">
+        <input class="input-sm" type="text" id="new-tag-input" placeholder="Add new tag..."/>
+        <button class="btn-small" onclick="addTag()">+ Add</button>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section-title">Brand Tag</div>
+      <input class="field-group" type="text" id="brand-tag-input" placeholder="Brand tag..." style="display:block;"/>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section-title">Social Links</div>
+      <div id="links-editor"></div>
+      <div class="preview-note">Changes sync to portfolio instantly</div>
+    </div>
+
+    <div class="save-msg" id="save-msg">✓ Changes saved!</div>
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="doLogout()" style="padding:12px 14px;">Logout</button>
+      <button class="btn-cancel" onclick="closeAdmin()">Cancel</button>
+      <button class="btn-primary" onclick="saveChanges()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════ THEME ══════════
+function toggleTheme(){
+  const dark=document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme',dark?'light':'dark');
+  localStorage.setItem('sb-theme',dark?'light':'dark');
+  updateThemeBtn();
+}
+function updateThemeBtn(){
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  document.getElementById('theme-icon').textContent=isDark?'☀️':'🌙';
+}
+
+// ══════════ AUTH & TOKEN ══════════
+const API_BASE='/api';
+const TOKEN_KEY='sb-token';
+const STATE_KEY='sb-state';
+
+function getToken(){
+  return sessionStorage.getItem(TOKEN_KEY);
+}
+
+function setToken(token){
+  sessionStorage.setItem(TOKEN_KEY,token);
+}
+
+function clearToken(){
+  sessionStorage.removeItem(TOKEN_KEY);
+}
+
+async function apiCall(endpoint,method='GET',data=null){
+  const headers={'Content-Type':'application/json'};
+  const token=getToken();
+  if(token){headers['Authorization']=`Bearer ${token}`;}
+
+  const fetchOpts={method,headers};
+  if(method!=='GET'&&data){fetchOpts.body=JSON.stringify(data);}
+
+  try{
+    const res=await fetch(`${API_BASE}${endpoint}`,fetchOpts);
+    if(res.status===401){clearToken();return null;}
+    return await res.json();
+  }catch(e){
+    console.error('API Error:',e);
+    return null;
+  }
+}
+
+// ══════════ UI STATE ══════════
+let state={
+  tags:['IT','Media Tech','AI','Digital Creator'],
+  brandTag:'Sugar BaBy Inc.',
+  links:[],
+  profilePhoto:null,
+  bio:'Creative entrepreneur & tech builder'
+};
+
+async function loadState(){
+  try{
+    const res=await apiCall('/portfolio');
+    if(res?.data){
+      state={...res.data};
+    }
+  }catch(e){
+    console.warn("Could not load portfolio data:",e);
+  }
+  applyState();
+}
+
+function applyState(){
+  const wrap=document.getElementById('bio-tags-wrap');
+  wrap.innerHTML='';
+  state.tags.forEach(t=>{const s=document.createElement('span');s.className='tag';s.textContent=t;wrap.appendChild(s);});
+  const b=document.createElement('span');b.className='tag brand';b.textContent=state.brandTag;wrap.appendChild(b);
+  
+  renderLinks();
+  const placeholder='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23e8d5b0"/><text x="50" y="58" font-size="40" text-anchor="middle" fill="%23fff">'+(state.brandTag?state.brandTag[0]:'S')+'</text></svg>';
+  document.getElementById('pfp-img').src=state.profilePhoto||placeholder;
+  document.getElementById('pfp-admin-preview').src=state.profilePhoto||placeholder;
+  document.getElementById('bio-input').value=state.bio||'';
+  document.getElementById('brand-tag-input').value=state.brandTag||'';
+  renderTags();
+}
+
+// ══════════ LINKS & ICONS ══════════
+let iconCache=null;
+
+async function fetchIcons(){
+  if(iconCache)return iconCache;
+  const res=await apiCall('/icons?all=true');
+  iconCache=res?.icons||{};
+  return iconCache;
+}
+
+async function renderLinks(){
+  const container=document.getElementById('links-container');
+  if(!container)return;
+  container.innerHTML='';
+
+  const icons=await fetchIcons();
+
+  for(const link of state.links){
+    const key=(link.icon||link.platform||'').toLowerCase().replace(/\s/g,'');
+    const iconData=icons[key];
+    const iconSrc=iconData?.url||'';
+    const item=document.createElement('div');
+    item.className='link-item';
+    item.innerHTML=`
+      <a href="${link.url}" target="_blank" class="link-btn">
+        <div class="icon-wrap">
+          <img src="${iconSrc}" alt="${link.platform}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Ccircle cx=%2212%22 cy=%2712%22 r=%2710%22 fill=%22%23ccc%22/%3E%3C/svg%3E'"/>
+        </div>
+        <div class="link-label">
+          <div class="link-platform">${link.platform}</div>
+          <div class="link-handle">${link.handle||''}</div>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+    `;
+    container.appendChild(item);
+  }
+}
+
+// ══════════ LOGIN ══════════
+function openLogin(){
+  document.getElementById('login-overlay').classList.add('show');
+  document.getElementById('login-user').focus();
+}
+
+function closeLogin(){
+  document.getElementById('login-overlay').classList.remove('show');
+  document.getElementById('login-err').classList.remove('show');
+}
+
+async function doLogin(){
+  const user=document.getElementById('login-user').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  const err=document.getElementById('login-err');
+  
+  if(!user||!pass){
+    err.textContent='Please enter username and password';
+    err.classList.add('show');
+    return;
+  }
+
+  const res=await apiCall('/login','POST',{username:user,password:pass});
+  
+  if(res?.success){
+    setToken(res.token);
+    closeLogin();
+    openAdmin();
+    loadState();
+  }else{
+    err.textContent=res?.error||'Login failed';
+    err.classList.add('show');
+  }
+}
+
+// ══════════ ADMIN ══════════
+function openAdmin(){
+  const token=getToken();
+  if(!token){openLogin();return;}
+  document.getElementById('admin-overlay').classList.add('show');
+}
+
+function closeAdmin(){
+  document.getElementById('admin-overlay').classList.remove('show');
+}
+
+function doLogout(){
+  clearToken();
+  closeAdmin();
+  applyState();
+}
+
+function renderTags(){
+  const editor=document.getElementById('tags-editor');
+  if(!editor)return;
+  editor.innerHTML='';
+  state.tags.forEach(tag=>{
+    const chip=document.createElement('div');
+    chip.className='tag-edit-chip';
+    chip.innerHTML=`${tag}<button class="tag-remove" onclick="removeTag('${tag}')">×</button>`;
+    editor.appendChild(chip);
+  });
+}
+
+function addTag(){
+  const input=document.getElementById('new-tag-input');
+  const tag=input.value.trim();
+  if(tag&&!state.tags.includes(tag)&&state.tags.length<20){
+    state.tags.push(tag);
+    renderTags();
+    input.value='';
+  }
+}
+
+function removeTag(tag){
+  state.tags=state.tags.filter(t=>t!==tag);
+  renderTags();
+}
+
+function handlePfpUpload(input){
+  if(!input.files.length)return;
+  const file=input.files[0];
+  const reader=new FileReader();
+  reader.onload=e=>{
+    state.profilePhoto=e.target.result;
+    document.getElementById('pfp-img').src=state.profilePhoto;
+    document.getElementById('pfp-admin-preview').src=state.profilePhoto;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveChanges(){
+  state.bio=document.getElementById('bio-input').value;
+  state.brandTag=document.getElementById('brand-tag-input').value;
+
+  const res=await apiCall('/portfolio','POST',state);
+  
+  if(res?.success){
+    const msg=document.getElementById('save-msg');
+    msg.classList.add('show');
+    setTimeout(()=>msg.classList.remove('show'),2000);
+    applyState();
+  }else{
+    alert('Failed to save: '+(res?.error||'Unknown error'));
+  }
+}
+
+// ══════════ INIT ══════════
+document.addEventListener('DOMContentLoaded',async ()=>{
+  const theme=localStorage.getItem('sb-theme')||'light';
+  document.documentElement.setAttribute('data-theme',theme);
+  updateThemeBtn();
+  await loadState();
+});
+</script>
+</body>
+</html>
